@@ -18,6 +18,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useJobs } from '../context/JobsContext';
 import { RootStackParamList } from '../types';
 import ScreenHeader from '../components/ScreenHeader';
+import { formatTimestamp } from '../utils/date'; // ← shared utility
 
 type DetailRoute = RouteProp<RootStackParamList, 'JobDetail'>;
 type Nav = NativeStackNavigationProp<RootStackParamList, 'JobDetail'>;
@@ -34,14 +35,6 @@ const getCompanyColor = (name: string) => {
 };
 
 const isHtml = (str: string) => /<[a-z][\s\S]*>/i.test(str);
-
-const formatTimestamp = (ts: number) => {
-  try {
-    return new Date(ts * 1000).toLocaleDateString('en-US', {
-      month: 'long', day: 'numeric', year: 'numeric',
-    });
-  } catch { return String(ts); }
-};
 
 // ── Reusable sub-components ──────────────────────────────────────────────────
 
@@ -128,13 +121,13 @@ const JobDetailScreen: React.FC = () => {
   const route = useRoute<DetailRoute>();
   const navigation = useNavigation<Nav>();
   const { job, fromSaved } = route.params;
-  const { saveJob, isJobSaved, isJobApplied } = useJobs();
+  const { saveJob, unsaveJob, isJobSaved, isJobApplied } = useJobs();
   const { width } = useWindowDimensions();
 
   const saved        = isJobSaved(job.id);
   const applied      = isJobApplied(job.id);
   const companyColor = getCompanyColor(job.companyName);
-  const styles       = createStyles(theme);
+  const styles       = React.useMemo(() => createStyles(theme), [theme]); // ← memoized
 
   const htmlTagStyles = {
     body:   { color: theme.text.secondary, fontSize: 14, lineHeight: 22 },
@@ -264,15 +257,15 @@ const JobDetailScreen: React.FC = () => {
               styles.saveBtn,
               { backgroundColor: saved ? theme.primaryLight : theme.cardAlt, borderColor: saved ? theme.primary : theme.border },
             ]}
-            onPress={() => !saved && saveJob(job)}
-            activeOpacity={saved ? 1 : 0.8}>
+            onPress={() => saved ? unsaveJob(job.id) : saveJob(job)}
+            activeOpacity={0.8}>
             <Ionicons
               name={saved ? 'bookmark' : 'bookmark-outline'}
               size={16}
               color={saved ? theme.primary : theme.text.secondary}
             />
             <Text style={[styles.saveBtnText, { color: saved ? theme.primary : theme.text.secondary }]}>
-              {saved ? 'Saved' : 'Save Job'}
+              {saved ? 'Unsave' : 'Save Job'}
             </Text>
           </TouchableOpacity>
         </View>

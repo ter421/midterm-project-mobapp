@@ -63,7 +63,7 @@ const CompanyLogo: React.FC<{ job: Job; size: number; theme: any }> = ({ job, si
 
 const JobCard: React.FC<JobCardProps> = ({ job, onViewDetail, showRemove, onRemove }) => {
   const { theme } = useTheme();
-  const { saveJob, isJobSaved, isJobApplied } = useJobs();
+  const { saveJob, unsaveJob, isJobSaved, isJobApplied } = useJobs();
   const saved   = isJobSaved(job.id);
   const applied = isJobApplied(job.id);
   const styles  = createStyles(theme);
@@ -90,8 +90,8 @@ const JobCard: React.FC<JobCardProps> = ({ job, onViewDetail, showRemove, onRemo
 
         <TouchableOpacity
           style={[styles.bookmarkBtn, saved && { backgroundColor: theme.primaryLight }]}
-          onPress={() => !saved && saveJob(job)}
-          activeOpacity={saved ? 1 : 0.7}>
+          onPress={() => saved ? unsaveJob(job.id) : saveJob(job)}
+          activeOpacity={0.7}>
           <Ionicons
             name={saved ? 'bookmark' : 'bookmark-outline'}
             size={20}

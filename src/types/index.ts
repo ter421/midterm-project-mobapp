@@ -58,3 +58,11 @@ export type MainTabParamList = {
   SavedJobs: undefined;
   AppliedJobs: undefined;
 };
+
+export type FeedbackPayload = {
+  jobTitle:      string;
+  companyName:   string;
+  applicantName: string;
+  fromSaved:     boolean;
+  onDone:        () => void;
+};

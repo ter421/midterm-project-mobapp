@@ -4,15 +4,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { useJobs } from '../context/JobsContext';
 import EmptyState from '../components/EmptyState';
+import { formatDate } from '../utils/date'; // ← extracted utility
 
 const AppliedJobsScreen: React.FC = () => {
-  const { theme } = useTheme();
-  const { appliedJobs } = useJobs();
-
-  const formatDate = (iso: string) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  };
+  const { theme }        = useTheme();
+  const { appliedJobs }  = useJobs();
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -26,6 +22,7 @@ const AppliedJobsScreen: React.FC = () => {
           </Text>
         </View>
       )}
+
       <FlatList
         data={appliedJobs}
         keyExtractor={item => item.job.id}
@@ -33,7 +30,6 @@ const AppliedJobsScreen: React.FC = () => {
           const companyInitial = item.job.companyName.charAt(0).toUpperCase();
           return (
             <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}>
-              {/* Status strip */}
               <View style={[styles.statusStrip, { backgroundColor: theme.accent }]} />
 
               <View style={styles.cardInner}>
@@ -56,10 +52,9 @@ const AppliedJobsScreen: React.FC = () => {
                   </View>
                 </View>
 
-                {/* Divider */}
                 <View style={[styles.divider, { backgroundColor: theme.divider }]} />
 
-                {/* Meta row */}
+                {/* Meta */}
                 <View style={styles.metaRow}>
                   {item.job.location ? (
                     <View style={styles.metaItem}>
@@ -116,12 +111,12 @@ const AppliedJobsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  statsBar: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 4 },
-  statsText: { fontSize: 13 },
-  statsCount: { fontWeight: '700', fontSize: 14 },
-  list: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 24 },
-  listEmpty: { flex: 1 },
+  container:   { flex: 1 },
+  statsBar:    { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 4 },
+  statsText:   { fontSize: 13 },
+  statsCount:  { fontWeight: '700', fontSize: 14 },
+  list:        { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 24 },
+  listEmpty:   { flex: 1 },
   card: {
     borderRadius: 20,
     marginBottom: 14,
@@ -134,86 +129,23 @@ const styles = StyleSheet.create({
     elevation: 3,
     flexDirection: 'row',
   },
-  statusStrip: {
-    width: 4,
-  },
-  cardInner: {
-    flex: 1,
-    padding: 16,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  logo: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  logoText: {
-    fontSize: 20,
-    fontWeight: '800',
-  },
-  cardTitles: { flex: 1 },
-  jobTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    letterSpacing: -0.2,
-  },
-  company: {
-    fontSize: 13,
-    marginTop: 2,
-    fontWeight: '500',
-  },
-  statusBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 20,
-  },
-  statusText: {
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  divider: {
-    height: 1,
-    marginBottom: 12,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 12,
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  metaText: {
-    fontSize: 12,
-    fontWeight: '500',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 10,
-    borderTopWidth: 1,
-  },
-  footerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-  },
-  footerText: {
-    fontSize: 12,
-    fontWeight: '500',
-  },
+  statusStrip: { width: 4 },
+  cardInner:   { flex: 1, padding: 16 },
+  cardHeader:  { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  logo:        { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginRight: 12 },
+  logoText:    { fontSize: 20, fontWeight: '800' },
+  cardTitles:  { flex: 1 },
+  jobTitle:    { fontSize: 15, fontWeight: '700', letterSpacing: -0.2 },
+  company:     { fontSize: 13, marginTop: 2, fontWeight: '500' },
+  statusBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 20 },
+  statusText:  { fontSize: 11, fontWeight: '700' },
+  divider:     { height: 1, marginBottom: 12 },
+  metaRow:     { flexDirection: 'row', gap: 16, marginBottom: 12 },
+  metaItem:    { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  metaText:    { fontSize: 12, fontWeight: '500' },
+  footer:      { flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, borderTopWidth: 1 },
+  footerItem:  { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  footerText:  { fontSize: 12, fontWeight: '500' },
 });
 
 export default AppliedJobsScreen;
