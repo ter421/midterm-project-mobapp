@@ -68,7 +68,6 @@ const ApplicationFormScreen: React.FC = () => {
             style={[styles.blockedBtn, { backgroundColor: theme.primary }]}
             onPress={() => navigation.goBack()}
             activeOpacity={0.85}>
-            <Ionicons name="arrow-back" size={16} color="#fff" />
             <Text style={styles.blockedBtnText}>Go Back</Text>
           </TouchableOpacity>
         </View>
@@ -119,14 +118,14 @@ const ApplicationFormScreen: React.FC = () => {
             <FormInput
               label="Full Name" iconName="person-outline" value={formData.fullName}
               onChangeText={t => updateField('fullName', t)} onBlur={() => touchField('fullName')}
-              placeholder="e.g. Maria Santos" error={errors.fullName}
+              placeholder="e.g. John Lowell Prado" error={errors.fullName}
               touched={!!formData.fullName || !!errors.fullName}
               autoCapitalize="words" style={{ color: theme.text.primary }}
             />
             <FormInput
               label="Email Address" iconName="mail-outline" value={formData.email}
               onChangeText={t => updateField('email', t)} onBlur={() => touchField('email')}
-              placeholder="e.g. maria@email.com" error={errors.email}
+              placeholder="e.g. lowell@email.com" error={errors.email}
               touched={!!formData.email || !!errors.email}
               keyboardType="email-address" autoCapitalize="none" style={{ color: theme.text.primary }}
             />
